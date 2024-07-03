@@ -108,23 +108,21 @@ const App = () => {
     }
   };
 
-const handleDeleteManga = async (title) => {
-  try {
-    await axios.delete("http://localhost:8000/manga/delete_manga", {
-      data: { title: title }
-    });
-    // Filter out the deleted manga from the state
-    setMangaLibrary(mangaLibrary.filter(manga => manga.title !== title));
-  } catch (error) {
-    if (error.response) {
-      console.error("Error response data:", error.response.data);
-    } else {
-      console.error("Error message:", error.message);
+  const handleDeleteManga = async (title) => {
+    try {
+      await axios.delete("http://localhost:8000/manga/delete_manga", {
+        data: { title: title }
+      });
+      // Filter out the deleted manga from the state
+      setMangaLibrary(mangaLibrary.filter(manga => manga.title !== title));
+    } catch (error) {
+      if (error.response) {
+        console.error("Error response data:", error.response.data);
+      } else {
+        console.error("Error message:", error.message);
+      }
     }
-  }
-};
-
-
+  };
 
   return (
     <div>
@@ -169,7 +167,7 @@ const handleDeleteManga = async (title) => {
 
           <div className="mb-3 mt-3">
             <label htmlFor="thumbnail" className="form-label">
-              Thumbnail
+              Thumbnail URL
             </label>
             <input
               type="text"
@@ -233,52 +231,57 @@ const handleDeleteManga = async (title) => {
           </thead>
           <tbody>
             {mangaLibrary.map((manga) => (
-                <tr key={manga.bookid}>
-                  <td>{manga.title}</td>
-                  <td>{manga.mangaka}</td>
-                  <td>{manga.thumbnail}</td>
-                  <td>{manga.state}</td>
-                  <td>{manga.rating}</td>
-                  <td>
-                    <form onSubmit={(event) => handleRatingSubmit(event, manga.title)}>
-                      <input
-                          type="number"
-                          className="form-control"
-                          value={ratingData[manga.title] || ""}
-                          onChange={(event) => handleRatingChange(event, manga.title)}
-                      />
-                      <button type="submit" className="btn btn-secondary mt-2">
-                        Update
-                      </button>
-                    </form>
-                  </td>
-                  <td>
-                    <form onSubmit={(event) => handleStateSubmit(event, manga.title)}>
-                      <select
-                          className="form-select"
-                          value={stateData[manga.title] || ""}
-                          onChange={(event) => handleStateChange(event, manga.title)}
-                      >
-                        <option value="">Choose state</option>
-                        <option value="read">Read</option>
-                        <option value="reading">Reading</option>
-                        <option value="wishlist">Wishlist</option>
-                      </select>
-                      <button type="submit" className="btn btn-secondary mt-2">
-                        Update
-                      </button>
-                    </form>
-                  </td>
-                  <td>
-                    <button
-                        className="btn btn-danger"
-                        onClick={() => handleDeleteManga(manga.title)}
-                    >
-                      Delete
+              <tr key={manga.bookid}>
+                <td>{manga.title}</td>
+                <td>{manga.mangaka}</td>
+                <td>
+                  {manga.thumbnail ? (
+                    <img src={manga.thumbnail} alt={manga.title} style={{ width: '100px', height: 'auto' }} />
+                  ) : (
+                    <span>No Thumbnail</span>
+                  )}
+                </td>
+                <td>{manga.state}</td>
+                <td>{manga.rating}</td>
+                <td>
+                  <form onSubmit={(event) => handleRatingSubmit(event, manga.title)}>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={ratingData[manga.title] || ""}
+                      onChange={(event) => handleRatingChange(event, manga.title)}
+                    />
+                    <button type="submit" className="btn btn-secondary mt-2">
+                      Update
                     </button>
-                  </td>
-
-                </tr>
+                  </form>
+                </td>
+                <td>
+                  <form onSubmit={(event) => handleStateSubmit(event, manga.title)}>
+                    <select
+                      className="form-select"
+                      value={stateData[manga.title] || ""}
+                      onChange={(event) => handleStateChange(event, manga.title)}
+                    >
+                      <option value="">Choose state</option>
+                      <option value="read">Read</option>
+                      <option value="reading">Reading</option>
+                      <option value="wishlist">Wishlist</option>
+                    </select>
+                    <button type="submit" className="btn btn-secondary mt-2">
+                      Update
+                    </button>
+                  </form>
+                </td>
+                <td>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDeleteManga(manga.title)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>
