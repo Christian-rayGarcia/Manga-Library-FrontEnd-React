@@ -99,7 +99,7 @@ async def update_rating(update_rating_body: UpdateRatingRequestBody):
 async def update_rating(update_state_body: UpdateStateRequestBody):
 	conn = psycopg2.connect(database="mangalibrarydb", user="christian-raygarcia", password="testtest123")
 	cur = conn.cursor()
-	cur.execute(f"UPDATE manga SET state = {update_state_body.new_state} WHERE title = '{update_state_body.title}'")
+	cur.execute(f"UPDATE manga SET state = '{update_state_body.new_state}' WHERE title = '{update_state_body.title}'")
 
 	cur.close()
 	conn.commit()
